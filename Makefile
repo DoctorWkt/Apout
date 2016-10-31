@@ -4,28 +4,35 @@
 # $Date: 2008/05/19 13:42:39 $
 #
 # You will need gcc if you choose the optimised compile below
-CC=gcc
+CC?=gcc
 
 # Set the CFLAGS, LDFLAGS for speed or debugging. If you don't want 2.11BSD
 # emulation, then remove the -DEMU211 flag.
 # Set up the LIBS if required for your system
 #
 # These flags for doing debugging
-CFLAGS= -Wall -g -DEMU211 -DEMUV1 -DNATIVES -DRUN_V1_RAW \
+#APOUT_OPTIONS?= -DEMU211 -DEMUV1 -DNATIVES -DRUN_V1_RAW \
 	-DDEBUG -DZERO_MEMORY -DWRITEBASE
-LDFLAGS= -g
+# These flags should be fine for most cases
+APOUT_OPTIONS?= -DEMU211 -DEMUv1 -DNATIVES
 
 # These flags for speed
-#CFLAGS= -DEMU211 -DNATIVES -DINLINE=inline -O2 -Winline -Wall \
+#CFLAGS+= -DEMU211 -DNATIVES -DINLINE=inline -O2 -Winline -Wall \
 #	-finline-functions -fomit-frame-pointer
-#LDFLAGS=
+#LDFLAGS?=
+
+# Assemble CFLAGS
+CFLAGS?= -O2 -DINLINE=inline -finline-functions -fomit-frame-pointer
+CFLAGS+=-Winline -Wunused-result # silence warnings
+CFLAGS+= $(APOUT_OPTIONS)
 
 # Any extra libraries required
 LIBS= -lm
 
 # Install destinations
-MANDIR=/usr/local/man/man1
-BINDIR=/usr/local/bin
+PREFIX?=/usr/local
+MANDIR=$(PREFIX)/man/man1
+BINDIR=$(PREFIX)/bin
 
 VERSION= apout2.3beta1
 SRCS=	cpu.c aout.c aout.h branch.c double.c ea.c itab.c main.c ke11a.c \
@@ -37,7 +44,7 @@ OBJS=	aout.o branch.o bsd_ioctl.o bsd_signal.o bsdtrap.o cpu.o debug.o \
 	v7trap.o
 
 apout: $(OBJS)
-	cc $(LDFLAGS) $(OBJS) -o apout $(LIBS)
+	$(CC) $(LDFLAGS) $(OBJS) -o apout $(LIBS)
 
 install: apout
 	cp apout $(BINDIR)

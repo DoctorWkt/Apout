@@ -1,7 +1,7 @@
 /* Startup for apout. Parse arguments, load the binary, and run it.
  *
- * $Revision: 1.22 $
- * $Date: 2002/06/10 11:44:21 $
+ * $Revision: 1.23 $
+ * $Date: Mon 31 Oct 2016 03:46:15 AM CET $
  */
 #include <assert.h>
 #include "defines.h"
@@ -89,10 +89,14 @@ main(int argc, char **argv)
     if ((apout_root = getenv("APOUT_ROOT"))) {  
 	set_apout_root(apout_root);
     } else {
+#ifdef APOUT_DONT_ASSUME_ROOT
         fprintf(stderr,                 
                 "APOUT_ROOT env variable not set before running apout\n");
         exit(1);
-    }   
+#else
+				set_apout_root("/");
+#endif
+		}   
 
 				/* Try to load the binary as an a.out */
     if (load_a_out(argv[0],NULL,1) == -1) {

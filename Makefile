@@ -37,8 +37,7 @@ BINDIR=$(PREFIX)/bin
 VERSION= apout2.3beta1
 SRCS=	cpu.c aout.c aout.h branch.c double.c ea.c itab.c main.c ke11a.c \
 	single.c fp.c v7trap.c bsdtrap.c defines.h v7trap.h debug.c \
-	bsdtrap.h bsd_ioctl.c bsd_signal.c magic.c v1trap.c v1trap.h \
-	apout.1 apout.0 README COPYRIGHT CHANGES LIMITATIONS TODO Makefile
+	bsdtrap.h bsd_ioctl.c bsd_signal.c magic.c v1trap.c v1trap.h
 OBJS=	aout.o branch.o bsd_ioctl.o bsd_signal.o bsdtrap.o cpu.o debug.o \
 	double.o ea.o fp.o itab.o ke11a.o magic.o main.o single.o v1trap.o \
 	v7trap.o
@@ -46,7 +45,7 @@ OBJS=	aout.o branch.o bsd_ioctl.o bsd_signal.o bsdtrap.o cpu.o debug.o \
 apout: $(OBJS)
 	$(CC) $(LDFLAGS) $(OBJS) -o apout $(LIBS)
 
-install: apout
+install: apout apout.1
 	cp apout $(BINDIR)
 	chmod 755 $(BINDIR)/apout
 	cp apout.1 $(MANDIR)
@@ -57,6 +56,9 @@ clean:
 
 apout.0: apout.1
 	nroff -man apout.1 > apout.0
+
+indent: $(SRCS)
+	astyle --style=kr $(SRCS)
 
 disttar: clean apout.0
 	- mkdir $(VERSION)

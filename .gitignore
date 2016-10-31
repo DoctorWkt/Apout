@@ -1,0 +1,7 @@
+# Objects
+*.o
+apout
+
+# Vim
+*.un~
+*.swp

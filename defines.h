@@ -41,7 +41,7 @@
 #define NO_GETPGID
 #endif
 
-#ifdef __FreeBSD__
+#if defined(__FreeBSD__) || defined(__OpenBSD__)
 #define Reboot(x) reboot(x)
 #endif
 
@@ -60,7 +60,7 @@
 #define O_EXLOCK 0
 #endif
 
-#if defined(__NetBSD__) || defined(__OpenBSD__)
+#ifdef __NetBSD__
 #define Reboot(x) reboot(x,NULL)
 #endif
 

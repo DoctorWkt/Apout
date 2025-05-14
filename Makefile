@@ -10,16 +10,10 @@ CC?=gcc
 # emulation, then remove the -DEMU211 flag.
 # Set up the LIBS if required for your system
 #
-# These flags for doing debugging
-#APOUT_OPTIONS?= -DEMU211 -DEMUV1 -DNATIVES -DRUN_V1_RAW \
-	-DDEBUG -DZERO_MEMORY -DWRITEBASE
 # These flags should be fine for most cases
-APOUT_OPTIONS?= -DEMU211 -DEMUv1 -DNATIVES
-
-# These flags for speed
-#CFLAGS+= -DEMU211 -DNATIVES -DINLINE=inline -O2 -Winline -Wall \
-#	-finline-functions -fomit-frame-pointer
-#LDFLAGS?=
+APOUT_OPTIONS?= -DEMU211 -DEMUV1 -DNATIVES
+# These flags for doing debugging
+#APOUT_OPTIONS+= -DDEBUG -DRUN_V1_RAW -DZERO_MEMORY -DWRITEBASE
 
 # Assemble CFLAGS
 CFLAGS?= -O2 -DINLINE=inline -finline-functions -fomit-frame-pointer

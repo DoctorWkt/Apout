@@ -69,7 +69,9 @@ void v7trap()
     int trapnum;
     long larg;
     char *buf, *buf2;
+#ifdef STREAM_BUFFERING
     char *fmode;		/* used with fdopen only */
+#endif
     time_t tim;
 
     struct stat stbuf;		/* used in STAT */
@@ -439,21 +441,29 @@ dostat:
         i = stat(buf, &stbuf);	/* If file is a directory */
         if (i == 0 && (stbuf.st_mode & S_IFDIR)) {
             i = open_dir(buf);
+#ifdef STREAM_BUFFERING
             fmode = "w+";
+#endif
             TrapDebug((dbg_file, "(dir) on %s return %d ", buf, i));
         } else {
             switch (sarg2) {
             case 0:
                 sarg2 = O_RDONLY;
+#ifdef STREAM_BUFFERING
                 fmode = "r";
+#endif
                 break;
             case 1:
                 sarg2 = O_WRONLY;
+#ifdef STREAM_BUFFERING
                 fmode = "w";
+#endif
                 break;
             default:
                 sarg2 = O_RDWR;
+#ifdef STREAM_BUFFERING
                 fmode = "w+";
+#endif
                 break;
             }
             i = open(buf, sarg2);

@@ -128,7 +128,7 @@ typedef unsigned long u_int32_t;
 typedef void (*_itab) P((void));
 extern _itab itab[];		/* Instruction Table for Fast Decode. */
 
-typedef float FLOAT;		/* For now, we use floats to do FP */
+typedef double FLOAT;		/* We now use floats to do FP */
 
 /* PDP processor defines. */
 

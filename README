@@ -1,8 +1,8 @@
 	       Apout -- Simulate PDP-11 Unix a.out binaries
-			    Version 2.3 Beta 1
+			        Version 2.4.0
 
 		     Warren Toomey  wkt@tuhs.org
-			        June 2002
+			       February 2026
 
 Introduction
 ------------
@@ -17,25 +17,20 @@ The advantages of an a.out simulator over a full-blown PDP-11 simulator are:
    + the simulator is less of a CPU-hog than a full-blown PDP-11 simulator
    + you don't need a simulated operating system or a simulated file system
 
-Apout can be obtained via anonymous ftp at minnie.tuhs.org in the
-directory pub/PDP-11/Sims/Apout. The directory pub/PDP-11/Sims/Apout/UnixBins
-contains tar archives of a.out binaries from several versions of UNIX.
-
 Status
 ------
-The program is now at release 2.3 Alpha2. Most of the binaries from V5, V6
-and V7 run fine. All of the V5/V6/V7 system calls are caught, but some are
+The program is now at release 2.4. Most of the binaries from V5, V6 and
+V7 run fine. All of the V5/V6/V7 system calls are caught, but some are
 ignored and some generate EPERM errors. The V1, V2, 2.9BSD and 2.11BSD
 environments are still under construction: see the file LIMITATIONS for
 details. Finally, the simulator won't run on a big-endian machine.
 
 INSTALLATION
 ------------
-I have only tested this program on FreeBSD 2.x and 3.x, and on RedHat
-Linux 2.2. It should compile on a 32-bit little-endian machine with
-some form of Unix; you may need to change some header file includes etc.
-See `defines.h' for the details. In particular, if your system doesn't have
-types for:
+I have only tested this program on a 64-bit Debian Linux; it should
+compile on a 32-bit little-endian machine with some form of Unix. You
+may need to change some header file includes etc. See `defines.h' for
+the details. In particular, if your system doesn't have types for:
 
 	int8_t, int16_t, int32_t, u_int8_t, u_int16_t, u_int32_t
 
@@ -52,7 +47,6 @@ of 2.11BSD will not be compiled in to the simulator. Similarly, if you remove
 the -DEMUV1 macro definition from the Makefile, the emulation of 1st and 2nd
 Edition UNIX will not be compiled in to the simulator. By default, EMUV1
 is disabled.
-
 
 Once you have configured apout, now type `make'. Hopefully, things will
 compile ok. You will eventually get the `apout' program.

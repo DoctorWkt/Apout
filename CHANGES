@@ -1,3 +1,7 @@
+2.4: to February 2026
+---------------------
+I've added 64-bit doubles to the floating-point emulation.
+
 2.3 Beta1: to 10th June 2002
 ----------------------------
 

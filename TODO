@@ -53,14 +53,6 @@ Finish off 2.11BSD emulation
 	Enumerate and write all of the ioctls: yucko. That means all of
 	the terminal stuff, blah!
 
-Fix up the floating-point
-
-	If the UNIX binaries never use the FP error handling, then don't
-	bother to implement it. We should, however, implement doubles.
-	We should spend some time to ensure that the FP operations are
-	accurate, both in terms of FP accuracy, and in giving results
-	as if they were on a real PDP-11.
-
 Make it work on big-endian machines
 
 	This would cause a lot of heartache in the code. It's not that

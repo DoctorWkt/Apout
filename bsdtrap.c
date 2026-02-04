@@ -187,6 +187,7 @@ void bsdtrap()
     case S_GETHOSTNAME:	/* DONE */
         buf = (char *) &dspace[uarg1];
         i = gethostname(buf, sarg2);
+printf("gethostname returns %d\n", i);
         break;
     case S_SETHOSTNAME:	/* DONE */
         buf = (char *) &dspace[uarg1];

@@ -23,12 +23,6 @@ ar.s to behave itself. The patch is:
         sys     read; buf; 512.
 
 
-Floating-point Limitations
---------------------------
-
-PDP-11 doubles are treated as floats. FEA/FEC don't exist.
-FP errors are not dealt with. Mistrust FP results for now.
-
 Limitations for 7th Edition Emulation in Apout 2.3
 --------------------------------------------------
 

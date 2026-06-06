@@ -613,6 +613,7 @@ dostat:
 
     if (i == -1) {
         SET_CC_C();
+        regs[0] = errno;
         TrapDebug((dbg_file, "errno is %s\n", strerror(errno)));
     } else {
         CLR_CC_C();

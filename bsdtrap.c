@@ -593,6 +593,11 @@ dostat:
         i = (i >> 16) & 0xffff;
         break;
     case S_SETHOSTID:	/* DONE */
+#ifdef __linux__
+# ifndef __GLIBC__
+#  define sethostid(host) ((void)0)
+# endif
+#endif
         larg1 = (sarg2 << 16) | uarg3;
         sethostid(larg1);
         i = 0;
@@ -987,6 +992,10 @@ static int bsdopen_dir(char *name)
     lseek(i, 0, SEEK_SET);
     return (i);
 }
+
+#ifndef O_FSYNC
+# define O_FSYNC O_SYNC
+#endif
 
 #ifdef NEED_MAP_FCNTL
 /* Map the 2.11BSD fcntl mode bits to the underlying

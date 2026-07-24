@@ -265,7 +265,7 @@ int trap_ioctl()
 /* Convert from termios to old sgttyb structure */
 static void to_sgttyb(struct tr_sgttyb *sgtb, struct termios *tios)
 {
-    switch (tios->c_ispeed) {
+    switch (cfgetispeed(tios)) {
     case B0:
         sgtb->sg_ispeed = TR_B0;
         break;
@@ -318,7 +318,7 @@ static void to_sgttyb(struct tr_sgttyb *sgtb, struct termios *tios)
         sgtb->sg_ispeed = TR_B0;
         break;
     }
-    switch (tios->c_ospeed) {
+    switch (cfgetospeed(tios)) {
     case B0:
         sgtb->sg_ospeed = TR_B0;
         break;
@@ -403,108 +403,108 @@ static void to_termios(struct tr_sgttyb *sgtb, struct termios *tios)
 
     switch (sgtb->sg_ispeed) {
     case TR_B0:
-        tios->c_ispeed = B0;
+        cfsetispeed(tios, B0);
         break;
     case TR_B50:
-        tios->c_ispeed = B50;
+        cfsetispeed(tios, B50);
         break;
     case TR_B75:
-        tios->c_ispeed = B75;
+        cfsetispeed(tios, B75);
         break;
     case TR_B110:
-        tios->c_ispeed = B110;
+        cfsetispeed(tios, B110);
         break;
     case TR_B134:
-        tios->c_ispeed = B134;
+        cfsetispeed(tios, B134);
         break;
     case TR_B150:
-        tios->c_ispeed = B150;
+        cfsetispeed(tios, B150);
         break;
     case TR_B200:
-        tios->c_ispeed = B200;
+        cfsetispeed(tios, B200);
         break;
     case TR_B300:
-        tios->c_ispeed = B300;
+        cfsetispeed(tios, B300);
         break;
     case TR_B600:
-        tios->c_ispeed = B600;
+        cfsetispeed(tios, B600);
         break;
     case TR_B1200:
-        tios->c_ispeed = B1200;
+        cfsetispeed(tios, B1200);
         break;
     case TR_B1800:
-        tios->c_ispeed = B1800;
+        cfsetispeed(tios, B1800);
         break;
     case TR_B2400:
-        tios->c_ispeed = B2400;
+        cfsetispeed(tios, B2400);
         break;
     case TR_B4800:
-        tios->c_ispeed = B4800;
+        cfsetispeed(tios, B4800);
         break;
     case TR_B9600:
-        tios->c_ispeed = B9600;
+        cfsetispeed(tios, B9600);
         break;
     case TR_EXTA:
-        tios->c_ispeed = B19200;
+        cfsetispeed(tios, B19200);
         break;
     case TR_EXTB:
-        tios->c_ispeed = B38400;
+        cfsetispeed(tios, B38400);
         break;
     default:
-        tios->c_ispeed = B0;
+        cfsetispeed(tios, B0);
         break;
     }
     switch (sgtb->sg_ospeed) {
     case TR_B0:
-        tios->c_ospeed = B0;
+        cfsetospeed(tios, B0);
         break;
     case TR_B50:
-        tios->c_ospeed = B50;
+        cfsetospeed(tios, B50);
         break;
     case TR_B75:
-        tios->c_ospeed = B75;
+        cfsetospeed(tios, B75);
         break;
     case TR_B110:
-        tios->c_ospeed = B110;
+        cfsetospeed(tios, B110);
         break;
     case TR_B134:
-        tios->c_ospeed = B134;
+        cfsetospeed(tios, B134);
         break;
     case TR_B150:
-        tios->c_ospeed = B150;
+        cfsetospeed(tios, B150);
         break;
     case TR_B200:
-        tios->c_ospeed = B200;
+        cfsetospeed(tios, B200);
         break;
     case TR_B300:
-        tios->c_ospeed = B300;
+        cfsetospeed(tios, B300);
         break;
     case TR_B600:
-        tios->c_ospeed = B600;
+        cfsetospeed(tios, B600);
         break;
     case TR_B1200:
-        tios->c_ospeed = B1200;
+        cfsetospeed(tios, B1200);
         break;
     case TR_B1800:
-        tios->c_ospeed = B1800;
+        cfsetospeed(tios, B1800);
         break;
     case TR_B2400:
-        tios->c_ospeed = B2400;
+        cfsetospeed(tios, B2400);
         break;
     case TR_B4800:
-        tios->c_ospeed = B4800;
+        cfsetospeed(tios, B4800);
         break;
     case TR_B9600:
-        tios->c_ospeed = B9600;
+        cfsetospeed(tios, B9600);
         break;
     case TR_EXTA:
-        tios->c_ospeed = B19200;
+        cfsetospeed(tios, B19200);
         break;
     case TR_EXTB:
-        tios->c_ospeed = B38400;
+        cfsetospeed(tios, B38400);
         break;
     default:
-        tios->c_ospeed = B0;
+        cfsetospeed(tios, B0);
         break;
     }
     tios->c_cc[VERASE] = sgtb->sg_erase;

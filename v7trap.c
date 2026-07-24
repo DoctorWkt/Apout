@@ -824,9 +824,9 @@ static int v7signal(int sig, int val)
 
     switch (val) {
     case V7_SIG_IGN:
-        return ((int) signal(v7sig[sig], SIG_IGN));
+        return ((int)(intptr_t) signal(v7sig[sig], SIG_IGN));
     case V7_SIG_DFL:
-        return ((int) signal(v7sig[sig], SIG_DFL));
+        return ((int)(intptr_t) signal(v7sig[sig], SIG_DFL));
     default:
         return (0);		/* No handling of this as yet */
     }

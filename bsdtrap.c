@@ -503,6 +503,9 @@ dostat:
         buf = xlate_filename((char *) &dspace[uarg1]);
         i = chown(buf, sarg2, sarg3);
         break;
+    case S_FCHOWN:		/* DONE */
+	i = fchown(sarg1, sarg2, sarg3);
+	break;
     case S_PIPE:		/* DONE */
         i = pipe(pfd);
 #ifdef STREAM_BUFFERING

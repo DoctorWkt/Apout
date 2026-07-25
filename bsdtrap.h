@@ -317,6 +317,15 @@ char *bsdtrap_name[] = {
 #define BSD_TRUNC         0x0400	/* truncate to zero length */
 #define BSD_EXCL          0x0800	/* error if already exists */
 
+/* fcntl() command flags */
+#define BSD_F_DUPFD	0		/* duplicate file descriptor */
+#define BSD_F_GETFD	1		/* get file descriptor flags */
+#define BSD_F_SETFD	2		/* set file descriptor flags */
+#define BSD_F_GETFL	3		/* get file status flags */
+#define BSD_F_SETFL	4		/* set file status flags */
+#define BSD_F_GETOWN	5		/* get SIGIO/SIGURG proc/pgrp */
+#define BSD_F_SETOWN	6		/* set SIGIO/SIGURG proc/pgrp */
+
 
 /* stat struct, used by S_STAT, S_FSTAT, S_LSTAT */
 struct tr_stat {

@@ -47,6 +47,7 @@ static int trap_execve P((int));
 static int bsdopen_dir P((char *name));
 #ifdef NEED_MAP_FCNTL
 static int16_t map_fcntl P((int16_t f));
+static int16_t map_fcntl_back P((int f));
 #endif
 #undef P
 
@@ -302,8 +303,28 @@ printf("gethostname returns %d\n", i);
             i = close(sarg1);
         break;
     case S_FCNTL:
-        TrapDebug((dbg_file, "on %d %d %d ", sarg1, sarg2, sarg3));
+        TrapDebug((dbg_file, "on %d %d 0x%x ", sarg1, sarg2, sarg3));
+#ifdef NEED_MAP_FCNTL
+	/* We need to map some fcntl() commands and arguments/results */
+	switch (sarg2) {
+	    case BSD_F_GETFL:
+        	i = map_fcntl_back(fcntl(sarg1, F_GETFL, sarg3));
+		break;
+	    case BSD_F_SETFL:
+        	i = fcntl(sarg1, F_SETFL, map_fcntl(sarg3));
+		break;
+	    case BSD_F_GETOWN:
+        	i = fcntl(sarg1, F_GETOWN, sarg3);
+		break;
+	    case BSD_F_SETOWN:
+        	i = fcntl(sarg1, F_SETOWN, sarg3);
+		break;
+	    default:
+        	i = fcntl(sarg1, sarg2, sarg3);
+	}
+#else
         i = fcntl(sarg1, sarg2, sarg3);
+#endif
         break;
     case S_FLOCK:
         i = flock(sarg1, sarg2);
@@ -844,7 +865,7 @@ dostat:
     } else {
         CLR_CC_C();
         regs[0] = i;
-        TrapDebug((dbg_file, "return %d\n", i));
+        TrapDebug((dbg_file, "return %d (0x%x)\n", i, i));
     }
     return;
 }
@@ -1034,6 +1055,30 @@ static int16_t map_fcntl(int16_t f)
         out |= O_EXCL;
 
     TrapDebug((dbg_file, "map_fcntl: 0x%x -> 0x%x, ", f, out));
+    return (out);
+}
+
+/* Map the underlying system's file descriptor flags
+ * back to the 2.11BSD values.
+ */
+static int16_t map_fcntl_back(int f)
+{
+    int16_t out = 0;
+
+    if (f & O_RDONLY)
+        out |= BSD_RDONLY;
+    if (f & O_WRONLY)
+        out |= BSD_WRONLY;
+    if (f & O_RDWR)
+        out |= BSD_RDWR;
+    if (f & O_NONBLOCK)
+        out |= BSD_NONBLOCK;
+    if (f & O_APPEND)
+        out |= BSD_APPEND;
+    if (f & O_ASYNC)
+        out |= BSD_ASYNC;
+
+    TrapDebug((dbg_file, "map_fcntl_back: 0x%x -> 0x%x, 0%o -> 0%o, ", f, out, f, out));
     return (out);
 }
 #endif

@@ -71,7 +71,7 @@ void loadb_dst(void)
 
     switch (DST_MODE) {
     case 0:
-        dstbyte = (u_int8_t) (regs[DST_REG] & 0377);
+        dstbyte = LOW8(regs[DST_REG]);
         return;
     case 1:
         addr = regs[DST_REG];
@@ -148,7 +148,7 @@ void loadb_src(void)
 
     switch (SRC_MODE) {
     case 0:
-        srcbyte = (u_int8_t) (regs[SRC_REG] & 0377);
+        srcbyte = LOW8(regs[SRC_REG]);
         return;
     case 1:
         addr = regs[SRC_REG];

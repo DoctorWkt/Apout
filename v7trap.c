@@ -232,13 +232,10 @@ void v7trap()
 
         TrapDebug((dbg_file, " on fd %d amt %ld whence %d return %d ",
                    sarg1, larg, whence, i));
-        if ((Binary == IS_A68 || Binary == IS_V6) || (Binary == IS_V5)) {
-            if (i != -1)
-                i = 0;
-            break;
+        if (!((Binary == IS_A68 || Binary == IS_V6) || (Binary == IS_V5))) {
+            regs[1] = i & 0xffff;
+            i = i >> 16;
         }
-        regs[1] = i & 0xffff;
-        i = i >> 16;
         break;
     case S_READ:
         buf = (char *) &dspace[uarg2];
@@ -578,23 +575,39 @@ dostat:
         }
         break;
     case S_GETUID:
-        i = geteuid();
-        regs[1] = i;
-        i = getuid();
+        if ((Binary == IS_A68 || Binary == IS_V6) || (Binary == IS_V5)) {
+            i = (getuid() & 0377) | ((geteuid() & 0377) << 8);
+        } else {
+            i = geteuid();
+            regs[1] = i;
+            i = getuid();
+        }
         break;
     case S_GETPID:
         i = getpid();
         break;
     case S_GETGID:
-        i = getegid();
-        regs[1] = i;
-        i = getgid();
+        if ((Binary == IS_A68 || Binary == IS_V6) || (Binary == IS_V5)) {
+            i = (getgid() & 0377) | ((getegid() & 0377) << 8);
+        } else {
+            i = getegid();
+            regs[1] = i;
+            i = getgid();
+        }
         break;
     case S_SETUID:
+        if ((Binary == IS_A68 || Binary == IS_V6) || (Binary == IS_V5))
+            sarg1 &= 0377;
         i = setuid(sarg1);
+        if (i == 0)
+            i = seteuid(sarg1);
         break;
     case S_SETGID:
+        if ((Binary == IS_A68 || Binary == IS_V6) || (Binary == IS_V5))
+            sarg1 &= 0377;
         i = setgid(sarg1);
+        if (i == 0)
+            i = setegid(sarg1);
         break;
     default:
         if (trapnum > S_CHROOT) {
@@ -617,7 +630,26 @@ dostat:
         TrapDebug((dbg_file, "errno is %s\n", strerror(errno)));
     } else {
         CLR_CC_C();
-        regs[0] = i;
+        if ((Binary == IS_A68 || Binary == IS_V6) || (Binary == IS_V5)) {
+            switch (trapnum) {
+            case S_FORK:
+            case S_READ:
+            case S_WRITE:
+            case S_OPEN:
+            case S_WAIT:
+            case S_CREAT:
+            case S_TIME:
+            case S_GETPID:
+            case S_GETUID:
+            case S_DUP:
+            case S_PIPE:
+            case S_GETGID:
+            case S_SIGNAL:
+                regs[0] = i;
+            }
+        } else {
+            regs[0] = i;
+        }
 #ifdef DEBUG
         if (trap_debug) {
             fprintf(dbg_file, "return %d\n", i);
@@ -815,21 +847,25 @@ static int trap_stty(u_int16_t fd, u_int16_t ucnt)
 /* Where possible, deal with signals */
 static int v7signal(int sig, int val)
 {
-    if (sig > V7_NSIG) {
+    if (sig <= 0 || sig > V7_NSIG) {
         errno = EINVAL;
         return (-1);
     }
     if (v7sig[sig] == 0)
         return (0);
 
-    switch (val) {
-    case V7_SIG_IGN:
-        return ((int)(intptr_t) signal(v7sig[sig], SIG_IGN));
-    case V7_SIG_DFL:
-        return ((int)(intptr_t) signal(v7sig[sig], SIG_DFL));
-    default:
-        return (0);		/* No handling of this as yet */
+    if (sig == 9) {	/* SIGKILL */
+        if (Binary == IS_V5)
+            return (0);
+        errno = EINVAL;
+        return (-1);
     }
+
+    if (val & 1)
+        return ((int)(intptr_t) signal(v7sig[sig], SIG_IGN));
+    if (val == V7_SIG_DFL)
+        return ((int)(intptr_t) signal(v7sig[sig], SIG_DFL));
+    return (0);		/* Custom handlers not implemented */
 }
 
 /* Workaround for bug in V5/V6 ctime() */

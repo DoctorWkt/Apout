@@ -206,6 +206,7 @@ void mfps()
 void mtps()
 {
     loadb_dst();
+    CC_N = CC_Z = CC_V = CC_C = 0;
     if (dstbyte & CC_NBIT)
         CC_N = 1;
     if (dstbyte & CC_ZBIT)

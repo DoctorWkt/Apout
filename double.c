@@ -181,11 +181,7 @@ void bis()
  * source and/or destination have been inlined. */
 void movb()
 {
-    if (SRC_MODE) {
-        loadb_src();
-    } else {
-        srcbyte = LOW8(regs[SRC_REG]);
-    }
+    loadb_src();
 
     CHGB_CC_N(srcbyte);
     CHGB_CC_Z(srcbyte);

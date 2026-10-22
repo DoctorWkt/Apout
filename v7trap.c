@@ -232,13 +232,10 @@ void v7trap()
 
         TrapDebug((dbg_file, " on fd %d amt %ld whence %d return %d ",
                    sarg1, larg, whence, i));
-        if ((Binary == IS_A68 || Binary == IS_V6) || (Binary == IS_V5)) {
-            if (i != -1)
-                i = 0;
-            break;
+        if (!((Binary == IS_A68 || Binary == IS_V6) || (Binary == IS_V5))) {
+            regs[1] = i & 0xffff;
+            i = i >> 16;
         }
-        regs[1] = i & 0xffff;
-        i = i >> 16;
         break;
     case S_READ:
         buf = (char *) &dspace[uarg2];
@@ -617,7 +614,26 @@ dostat:
         TrapDebug((dbg_file, "errno is %s\n", strerror(errno)));
     } else {
         CLR_CC_C();
-        regs[0] = i;
+        if ((Binary == IS_A68 || Binary == IS_V6) || (Binary == IS_V5)) {
+            switch (trapnum) {
+            case S_FORK:
+            case S_READ:
+            case S_WRITE:
+            case S_OPEN:
+            case S_WAIT:
+            case S_CREAT:
+            case S_TIME:
+            case S_GETPID:
+            case S_GETUID:
+            case S_DUP:
+            case S_PIPE:
+            case S_GETGID:
+            case S_SIGNAL:
+                regs[0] = i;
+            }
+        } else {
+            regs[0] = i;
+        }
 #ifdef DEBUG
         if (trap_debug) {
             fprintf(dbg_file, "return %d\n", i);

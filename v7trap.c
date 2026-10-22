@@ -599,11 +599,15 @@ dostat:
         if ((Binary == IS_A68 || Binary == IS_V6) || (Binary == IS_V5))
             sarg1 &= 0377;
         i = setuid(sarg1);
+        if (i == 0)
+            i = seteuid(sarg1);
         break;
     case S_SETGID:
         if ((Binary == IS_A68 || Binary == IS_V6) || (Binary == IS_V5))
             sarg1 &= 0377;
         i = setgid(sarg1);
+        if (i == 0)
+            i = setegid(sarg1);
         break;
     default:
         if (trapnum > S_CHROOT) {

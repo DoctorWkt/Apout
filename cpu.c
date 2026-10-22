@@ -72,11 +72,11 @@ void run()
             default:
                 name = iname[i];
             }
-            TrapDebug((dbg_file, "%06o %06o %4s ", regs[7], ir, name));
-            TrapDebug((dbg_file, "%06o %06o %06o %06o %06o %06o %06o   ",
+            InstDebug((dbg_file, "%06o %06o %4s ", regs[7], ir, name));
+            InstDebug((dbg_file, "%06o %06o %06o %06o %06o %06o %06o   ",
                        regs[0], regs[1], regs[2], regs[3],
                        regs[4], regs[5], regs[6]));
-            TrapDebug((dbg_file, "NZVC1 %d%d%d%d\n", CC_N, CC_Z, CC_V,
+            InstDebug((dbg_file, "NZVC1 %d%d%d%d\n", CC_N, CC_Z, CC_V,
                        CC_C));
             fflush(dbg_file);
         }

@@ -575,22 +575,34 @@ dostat:
         }
         break;
     case S_GETUID:
-        i = geteuid();
-        regs[1] = i;
-        i = getuid();
+        if ((Binary == IS_A68 || Binary == IS_V6) || (Binary == IS_V5)) {
+            i = (getuid() & 0377) | ((geteuid() & 0377) << 8);
+        } else {
+            i = geteuid();
+            regs[1] = i;
+            i = getuid();
+        }
         break;
     case S_GETPID:
         i = getpid();
         break;
     case S_GETGID:
-        i = getegid();
-        regs[1] = i;
-        i = getgid();
+        if ((Binary == IS_A68 || Binary == IS_V6) || (Binary == IS_V5)) {
+            i = (getgid() & 0377) | ((getegid() & 0377) << 8);
+        } else {
+            i = getegid();
+            regs[1] = i;
+            i = getgid();
+        }
         break;
     case S_SETUID:
+        if ((Binary == IS_A68 || Binary == IS_V6) || (Binary == IS_V5))
+            sarg1 &= 0377;
         i = setuid(sarg1);
         break;
     case S_SETGID:
+        if ((Binary == IS_A68 || Binary == IS_V6) || (Binary == IS_V5))
+            sarg1 &= 0377;
         i = setgid(sarg1);
         break;
     default:
